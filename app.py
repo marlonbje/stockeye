@@ -1,4 +1,3 @@
-from db import Database
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -338,7 +337,18 @@ def update_graph(n_clicks: int, symbol: str):
 
     if not n_clicks:
         return fig
-
+    
+    if name_price not in tables:
+        pricedata = yf.download(
+            symbol, interval=interval,
+            start=datetime.now() - timedelta(days=500),
+            end=datetime.now(), auto_adjust=True,
+            multi_level_index=False
+        )
+        database.addTable(name_price, pricedata)
+    else:
+        pricedata = database.getTable(name_price)
+    
     if name_fundamental not in tables:
         ticker        = yf.Ticker(symbol)
         income_stmt   = ticker.get_incomestmt(freq=frequency)
@@ -350,17 +360,16 @@ def update_graph(n_clicks: int, symbol: str):
         database.addTable(name_fundamental, fundamental)
     else:
         fundamental = database.getTable(name_fundamental)
-
-    if name_price not in tables:
-        pricedata = yf.download(
-            symbol, interval=interval,
-            start=datetime.now() - timedelta(days=500),
-            end=datetime.now(), auto_adjust=True,
-            multi_level_index=False
-        )
-        database.addTable(name_price, pricedata)
-    else:
-        pricedata = database.getTable(name_price)
+    
+    for earnings_date in fundamental["TotalRevenue"].dropna().index:
+        if pricedata.index[0] <= earnings_date <= pricedata.index[-1]:
+            fig.add_vline(
+                earnings_date,
+                line=dict(dash="dot", color=palette[2], width=1),
+                opacity=0.6, col=1, row=1
+            )
+            
+    fundamental.index = pd.to_datetime(fundamental.index).to_period("Q").astype(str)
 
     fig.add_trace(
         go.Ohlc(
@@ -423,14 +432,6 @@ def update_graph(n_clicks: int, symbol: str):
             ),
             row=2, col=2
         )
-
-    for earnings_date in fundamental["TotalRevenue"].dropna().index:
-        if pricedata.index[0] <= earnings_date <= pricedata.index[-1]:
-            fig.add_vline(
-                earnings_date,
-                line=dict(dash="dot", color=palette[2], width=1),
-                opacity=0.6, col=1, row=1
-            )
 
     return fig
 
