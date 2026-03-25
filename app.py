@@ -231,7 +231,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
             low=pricedata.Low,
             close=pricedata.Close,
             increasing_line_color=ACCENT,
-            decreasing_line_color="#ff6b6b",
+            decreasing_line_color="#ff4466",
             hovertemplate=(
                 "<b>%{x}</b><br>"
                 "O %{open:.2f}  H %{high:.2f}<br>"
