@@ -10,9 +10,9 @@ The focus is on multiple dynamics: situations where valuation multiples have com
 
 ## What it shows
 
-- **Price chart** — Weekly OHLC candlestick chart for the past 500 days
+- **Price chart** — Monthly OHLC candlestick chart for the past 1500 days
 - **Income Statement** — Revenue, Gross Profit, Operating Income and Net Income over the last quarters
-- **Balance Sheet** — Total Assets, Current Liabilities and Stockholders' Equity over the same period
+- **Debt Level And Coverage** — Total Debt, Free-Cash-Flow and Cash & Cash-Equivalents over the same period
 
 ## Usage
 
