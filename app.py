@@ -131,8 +131,8 @@ app.layout = html.Div([
 )
 def update_graph(n_clicks: int, symbol: str) -> go.Figure:
     tables = database.getTableNames()
-    interval = "1wk"
-    frequency = "quarterly"
+    interval = "1mo"
+    frequency = "yearly"
     name_price = f"{symbol}_{interval}"
     name_fundamental = f"{symbol}_{frequency}"
 
@@ -205,7 +205,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
         fundamental = database.getTable(name_fundamental)
 
     if name_price not in tables:
-        pricedata = yf.download(symbol, interval=interval, start=datetime.now()-timedelta(days=500),
+        pricedata = yf.download(symbol, interval=interval, start=datetime.now()-timedelta(days=1500),
                                 end=datetime.now(), auto_adjust=True, multi_level_index=False)
         database.addTable(name_price, pricedata)
     else:
