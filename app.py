@@ -344,7 +344,8 @@ def update_graph(n_clicks: int, symbol: str):
             symbol, interval=interval,
             start=datetime.now() - timedelta(days=500),
             end=datetime.now(), auto_adjust=True,
-            multi_level_index=False
+            multi_level_index=False,
+            progress=False
         )
         database.addTable(name_price, pricedata)
     else:
