@@ -22,7 +22,7 @@ class Database:
             data.index.name = "index"
             data.to_sql(name=tableName, con=self.con, if_exists="append")
             self.con.commit()
-        except Exception:
+        except Exception as e:
             self.logger.error(f"{self} | Failed adding {tableName}: {e}")
         
     def getTable(self, tableName: str) -> pd.DataFrame:
