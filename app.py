@@ -10,17 +10,6 @@ from datetime import datetime, timedelta
 app = Dash(__name__)
 database = Database("stockdata")
 
-"""
-BG          = “#0d0f14”
-SURFACE     = “#13161e”
-SURFACE2    = “#1a1e2a”
-BORDER      = “#262b3d”
-ACCENT      = “#4fffb0”
-ACCENT2     = “#7b6cff”
-TEXT        = “#e8eaf0”
-TEXT_DIM    = “rgba(232,234,240,0.4)”
-"""
-
 BG          = "#090d12"
 SURFACE     = "#0e1520"
 SURFACE2    = "#131d2b"
@@ -29,7 +18,6 @@ ACCENT      = "#00d4ff"
 ACCENT2     = "#0ff5c0"        
 TEXT        = "#ddeef8"
 TEXT_DIM    = "rgba(221,238,248,0.4)"
-
 FONT        = "JetBrains Mono, Fira Mono, monospace"
 
 app.layout = html.Div([
@@ -143,7 +131,7 @@ app.layout = html.Div([
 )
 def update_graph(n_clicks: int, symbol: str) -> go.Figure:
     tables = database.getTableNames()
-    interval = "1mo"
+    interval = "1wk"
     frequency = "yearly"
     name_price = f"{symbol}_{interval}"
     name_fundamental = f"{symbol}_{frequency}"
