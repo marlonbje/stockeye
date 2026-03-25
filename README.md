@@ -38,4 +38,4 @@ plotly
 pandas
 yfinance
 ```
-<img src="stockeye.png">
+<img src="stockeye-v3.png">
