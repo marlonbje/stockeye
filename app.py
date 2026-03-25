@@ -10,15 +10,16 @@ from datetime import datetime, timedelta
 app = Dash(__name__)
 database = Database("stockdata")
 
-BG          = "#090d12"
-SURFACE     = "#0e1520"
-SURFACE2    = "#131d2b"
-BORDER      = "#1c2d42"
-ACCENT      = "#00d4ff"      
-ACCENT2     = "#0ff5c0"        
-TEXT        = "#ddeef8"
-TEXT_DIM    = "rgba(221,238,248,0.4)"
+BG          = "#06080d"
+SURFACE     = "#0b0f17"
+SURFACE2    = "#10161f"
+BORDER      = "#182030"
+ACCENT      = "#00e5b0"     
+ACCENT2     = "#ff2d78"           
+TEXT        = "#d8e8f5"
+TEXT_DIM    = "rgba(216,232,245,0.35)"
 FONT        = "JetBrains Mono, Fira Mono, monospace"
+
 
 app.layout = html.Div([
 
@@ -131,12 +132,12 @@ app.layout = html.Div([
 )
 def update_graph(n_clicks: int, symbol: str) -> go.Figure:
     tables = database.getTableNames()
-    interval = "1wk"
-    frequency = "yearly"
+    interval = "1d"
+    frequency = "quarterly"
     name_price = f"{symbol}_{interval}"
     name_fundamental = f"{symbol}_{frequency}"
 
-    palette = [ACCENT, ACCENT2, "#ff6b6b", "#ffd166", "#06d6a0", "#118ab2"]
+    palette = [ACCENT, ACCENT2, "#00aaff", "#ffaa00", "#bf5fff", "#ff6b35"]
 
     fig = make_subplots(
         rows=2,
@@ -205,7 +206,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
         fundamental = database.getTable(name_fundamental)
 
     if name_price not in tables:
-        pricedata = yf.download(symbol, interval=interval, start=datetime.now()-timedelta(days=1500),
+        pricedata = yf.download(symbol, interval=interval, start=datetime.now()-timedelta(days=500),
                                 end=datetime.now(), auto_adjust=True, multi_level_index=False)
         database.addTable(name_price, pricedata)
     else:
@@ -219,7 +220,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
             low=pricedata.Low,
             close=pricedata.Close,
             increasing_line_color=ACCENT,
-            decreasing_line_color="#ff4466",
+            decreasing_line_color=ACCENT2,
             hovertemplate=(
                 "<b>%{x}</b><br>"
                 "O %{open:.2f}  H %{high:.2f}<br>"
@@ -249,7 +250,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
             ), row=2, col=1
         )
 
-    group2 = ["TotalDebt", "FreeCashFlow", "CashAndCashEquivalents"]
+    group2 = ["TotalDebt", "FreeCashFlow", "CashAndCashEquivalents", "StockholdersEquity"]
     for n, bar in enumerate(group2):
         try:
             bardata = fundamental[bar].dropna()
