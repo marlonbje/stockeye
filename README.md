@@ -11,8 +11,8 @@ The focus is on multiple dynamics: situations where valuation multiples have com
 ## What it shows
 
 - **Price chart** — Weekly OHLC candlestick chart for the past 500 days
-- **Income Statement** — Revenue, Gross Profit, Operating Income and Net Income over the last quarters
-- **Debt Level And Coverage** — Total Debt, Free-Cash-Flow, Cash & Cash-Equivalents and Stockholders' Equity over the same period
+- **Income Statement** — Revenue, Gross Profit, Operating Income and Net Income and Net Margin over the last quarters
+- **Balance Sheet** — Total Assets, Current Liabilities and Stockholders' Equity over the same period
 
 ## Usage
 
@@ -38,4 +38,4 @@ plotly
 pandas
 yfinance
 ```
-<img src="stockeye.png">
+<img src="stockeye.jpeg">
