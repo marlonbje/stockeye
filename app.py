@@ -10,14 +10,14 @@ from datetime import datetime, timedelta
 app = Dash(__name__)
 database = Database("stockdata")
 
-BG          = "#0d0f14"
-SURFACE     = "#13161e"
-SURFACE2    = "#1a1e2a"
-BORDER      = "#262b3d"
-ACCENT      = "#4fffb0"      
-ACCENT2     = "#7b6cff"        
-TEXT        = "#e8eaf0"
-TEXT_DIM    = "rgba(232,234,240,0.4)"
+BG          = "#090d12"
+SURFACE     = "#0e1520"
+SURFACE2    = "#131d2b"
+BORDER      = "#1c2d42"
+ACCENT      = "#00d4ff"      
+ACCENT2     = "#0ff5c0"        
+TEXT        = "#ddeef8"
+TEXT_DIM    = "rgba(221,238,248,0.4)"
 FONT        = "JetBrains Mono, Fira Mono, monospace"
 
 app.layout = html.Div([
@@ -31,7 +31,7 @@ app.layout = html.Div([
                 "fontSize": "18px", "fontWeight": "700",
                 "letterSpacing": "4px", "color": TEXT
             }),
-            html.Span("  v2.0", style={
+            html.Span("  v3.0", style={
                 "fontSize": "11px", "color": TEXT_DIM, "marginLeft": "6px"
             }),
         ], style={"display": "flex", "alignItems": "center"}),
@@ -124,7 +124,6 @@ app.layout = html.Div([
     "margin": "0",
 })
 
-
 @app.callback(
     Output("graph", "figure"),
     Input("submit_button", "n_clicks"),
@@ -146,7 +145,7 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
             [{"type": "xy", "colspan": 2}, None],
             [{"type": "xy"}, {"type": "xy"}]
         ],
-        subplot_titles=["PRICE CHART", "INCOME STATEMENT", "BALANCE SHEET"],
+        subplot_titles=["PRICE CHART", "INCOME STATEMENT", "DEBT LEVEL AND COVERAGE"],
         row_heights=[0.62, 0.38],
         horizontal_spacing=0.06,
         vertical_spacing=0.12
@@ -230,9 +229,12 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
         ), row=1, col=1
     )
 
-    income = ["TotalRevenue", "GrossProfit", "OperatingIncome", "NetIncome"]
-    for n, bar in enumerate(income):
-        bardata = fundamental[bar].dropna()
+    group1 = ["TotalRevenue", "GrossProfit", "OperatingIncome", "NetIncome"]
+    for n, bar in enumerate(group1):
+        try:
+            bardata = fundamental[bar].dropna()
+        except KeyError:
+            continue
         fig.add_trace(
             go.Bar(
                 x=bardata.index,
@@ -247,9 +249,12 @@ def update_graph(n_clicks: int, symbol: str) -> go.Figure:
             ), row=2, col=1
         )
 
-    balance = ["TotalAssets", "CurrentLiabilities", "StockholdersEquity"]
-    for n, bar in enumerate(balance):
-        bardata = fundamental[bar].dropna()
+    group2 = ["TotalDebt", "FreeCashFlow", "CashAndCashEquivalents"]
+    for n, bar in enumerate(group2):
+        try:
+            bardata = fundamental[bar].dropna()
+        except KeyError:
+            continue
         fig.add_trace(
             go.Bar(
                 x=bardata.index,
