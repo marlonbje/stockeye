@@ -362,16 +362,6 @@ def update_graph(n_clicks: int, symbol: str):
         database.addTable(name_fundamental, fundamental)
     else:
         fundamental = database.getTable(name_fundamental)
-    
-    for earnings_date in fundamental["TotalRevenue"].dropna().index:
-        if pricedata.index[0] <= earnings_date <= pricedata.index[-1]:
-            fig.add_vline(
-                earnings_date,
-                line=dict(dash="dot", color=palette[2], width=1),
-                opacity=0.6, col=1, row=1
-            )
-            
-    fundamental.index = pd.to_datetime(fundamental.index).to_period("Q").astype(str)
 
     fig.add_trace(
         go.Ohlc(
@@ -389,6 +379,16 @@ def update_graph(n_clicks: int, symbol: str):
         ),
         row=1, col=1
     )
+    
+    for earnings_date in fundamental["TotalRevenue"].dropna().index:
+        if pricedata.index[0] <= earnings_date <= pricedata.index[-1]:
+            fig.add_vline(
+                earnings_date,
+                line=dict(dash="dot", color=palette[2], width=1),
+                opacity=0.6, col=1, row=1
+            )
+            
+    fundamental.index = pd.to_datetime(fundamental.index).to_period("Q").astype(str)
 
     for n, bar in enumerate(["TotalRevenue", "GrossProfit", "OperatingIncome", "NetIncome"]):
         try:
