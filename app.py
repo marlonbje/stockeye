@@ -10,14 +10,14 @@ from datetime import datetime, timedelta
 app = Dash(__name__)
 database = Database("stockdata")
 
-BG          = "#06080d"
-SURFACE     = "#0b0f17"
-SURFACE2    = "#10161f"
-BORDER      = "#182030"
-ACCENT      = "#00e5b0"
+BG          = "#09060d"
+SURFACE     = "#110b17"
+SURFACE2    = "#19101f"
+BORDER      = "#281830"
+ACCENT      = "#b44dff"
 ACCENT2     = "#ff2d78"
-TEXT        = "#d8e8f5"
-TEXT_DIM    = "rgba(216,232,245,0.35)"
+TEXT        = "#ecd8f5"
+TEXT_DIM    = "rgba(236,216,245,0.35)"
 FONT        = "JetBrains Mono, Fira Mono, monospace"
 
 _px   = lambda n: f"{n}px"
@@ -285,8 +285,15 @@ def update_graph(n_clicks: int, symbol: str):
     frequency = "quarterly"
     name_price       = f"{symbol}_{interval}"
     name_fundamental = f"{symbol}_{frequency}"
-
-    palette = [ACCENT, ACCENT2, "#00aaff", "#ffaa00", "#bf5fff", "#ff6b35"]
+    
+    palette = [
+        ACCENT,
+        ACCENT2,
+        "#2d78ff", 
+        "#ff9d2d",
+        "#7a1fff", 
+        "#ff3da6",
+    ]
 
     fig = make_subplots(
         rows=2, cols=2,
@@ -294,7 +301,7 @@ def update_graph(n_clicks: int, symbol: str):
             [{"type": "xy", "colspan": 2}, None],
             [{"type": "xy", "secondary_y": True}, {"type": "xy"}],
         ],
-        subplot_titles=["PRICE CHART", "INCOME STATEMENT", "BALANCE SHEET"],
+        subplot_titles=["PRICE CHART", "INCOME STATEMENT", "CASHFLOW STATEMENT"],
         row_heights=[0.62, 0.38],
         horizontal_spacing=0.06,
         vertical_spacing=0.14,
@@ -390,7 +397,7 @@ def update_graph(n_clicks: int, symbol: str):
             
     fundamental.index = pd.to_datetime(fundamental.index).to_period("Q").astype(str)
 
-    for n, bar in enumerate(["TotalRevenue", "GrossProfit", "OperatingIncome", "NetIncome"]):
+    for n, bar in enumerate(["TotalRevenue", "NetIncome"]):
         try:
             bardata = fundamental[bar].dropna()
         except KeyError:
@@ -417,10 +424,14 @@ def update_graph(n_clicks: int, symbol: str):
             ),
             row=2, col=1, secondary_y=True
         )
+        
+        fig.update_yaxes(**axis_style, secondary_y=True, range=[0, 100], row=2, col=1)
+        fig.update_yaxes(secondary_y=False, showgrid=False, row=2, col=1)
+        
     except Exception:
         pass
 
-    for n, bar in enumerate(["TotalAssets", "CurrentLiabilities", "StockholdersEquity"]):
+    for n, bar in enumerate(["OperatingCashFlow", "InvestingCashFlow", "FinancingCashFlow"]):
         try:
             bardata = fundamental[bar].dropna()
         except KeyError:
